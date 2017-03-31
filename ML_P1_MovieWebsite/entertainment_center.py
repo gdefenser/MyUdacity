@@ -1,6 +1,7 @@
 import media
 import fresh_tomatoes
 
+#defind Movie instances
 iron_man = media.Movie("Iron Man",
                        "https://img.unlonecdn.ru/2016/06/27/poster/fd41bd695a884395145347399e62d4d7-iron-man-1467058232.jpg",
                        "https://www.youtube.com/watch?v=8hYlB38asDY")
@@ -28,4 +29,5 @@ captain_america3 = media.Movie("Captain America : Civil War",
 #print iron_man3.stroyline
 #captain_america3.show_trailer()
 my_movies = [iron_man,iron_man2,iron_man3,captain_america,captain_america2,captain_america3]
+#view in browser
 fresh_tomatoes.open_movies_page(my_movies)
