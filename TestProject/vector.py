@@ -57,7 +57,7 @@ class Vector(object):
     def radian(self,v):
         inner_products = self.inner_products(v)
         magnitude = self.magnitude() * v.magnitude()
-        return math.acos(inner_products/magnitude)
+        return math.acos(round(inner_products/magnitude,3))
 
     def degrees(self,v):
         return math.degrees(self.radian(v))
@@ -67,7 +67,7 @@ class Vector(object):
 
     def is_parallel(self,v):
         if self.is_zero() == False and v.is_zero() == False:
-            return self.degrees(v)==180 or self.degrees(v)==0
+            return self.degrees(v)==0 or self.degrees(v)==180
         else:
             #zero vector parallel to every vector
             return True
@@ -75,7 +75,7 @@ class Vector(object):
 
     def is_orthogonal(self,v):
         if self.is_zero() == False and v.is_zero() == False:
-            return self.degrees(v)==90
+            return self.degrees(v)==90 or self.degrees(v)==270
         else:
             #zero vector orthogonal to every vector
             return True

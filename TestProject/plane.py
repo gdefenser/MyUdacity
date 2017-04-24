@@ -1,20 +1,20 @@
-from decimal import Decimal, getcontext
+from decimal import Decimal,getcontext
 
 from vector import Vector
 
 getcontext().prec = 30
 
 
-class Line(object):
+class Plane(object):
 
     NO_NONZERO_ELTS_FOUND_MSG = 'No nonzero elements found'
 
     def __init__(self, normal_vector=None, constant_term=None):
-        self.dimension = 2
+        self.dimension = 3
 
         if not normal_vector:
             all_zeros = [0]*self.dimension
-            normal_vector = Vector(all_zeros)
+            normal_vector = all_zeros
         self.normal_vector = normal_vector
 
         if not constant_term:
@@ -30,14 +30,14 @@ class Line(object):
             c = self.constant_term
             basepoint_coords = [0]*self.dimension
 
-            initial_index = Line.first_nonzero_index(n)
+            initial_index = Plane.first_nonzero_index(n)
             initial_coefficient = n[initial_index]
 
             basepoint_coords[initial_index] = self.round(c/initial_coefficient)
             self.basepoint = Vector(basepoint_coords)
 
         except Exception as e:
-            if str(e) == Line.NO_NONZERO_ELTS_FOUND_MSG:
+            if str(e) == Plane.NO_NONZERO_ELTS_FOUND_MSG:
                 self.basepoint = None
             else:
                 raise e
@@ -70,7 +70,7 @@ class Line(object):
         n = self.normal_vector
 
         try:
-            initial_index = Line.first_nonzero_index(n)
+            initial_index = Plane.first_nonzero_index(n)
             terms = [write_coefficient(n[i], is_initial_term=(i==initial_index)) + 'x_{}'.format(i+1)
                      for i in range(self.dimension) if round(n[i], num_decimal_places) != 0]
             output = ' '.join(terms)
@@ -88,31 +88,30 @@ class Line(object):
 
         return output
 
-    def is_parallel(self,l):
-        return  self.round_normal_vector().is_parallel(l.round_normal_vector())
-
-    def __eq__(self,l):
-        if self.is_parallel(l):
+    def __eq__(self,p):
+        if self.is_parallel(p):
             v_s_basepoint = self.basepoint
-            v_l_basepoint = l.basepoint
-            d_v = Vector(v_s_basepoint.minus(v_l_basepoint.coordinates))
-            return d_v.is_orthogonal(Vector(self.normal_vector))
+            v_l_basepoint = p.basepoint
+            if v_s_basepoint is not None and v_l_basepoint is not None:
+                d_v = Vector(v_s_basepoint.minus(v_l_basepoint.coordinates))
+                return d_v.is_orthogonal(Vector(self.normal_vector))
         return False
 
-    def convert_to_float(self,v):
-        if type(v) == str or type(v) == Decimal:
-            v = float(v)
-        return v
+    def equation_equal(self,p):
+        return self.__str__()==p.__str__()
 
     @staticmethod
     def first_nonzero_index(iterable):
         for k, item in enumerate(iterable):
             if not MyDecimal(item).is_near_zero():
                 return k
-        raise Exception(Line.NO_NONZERO_ELTS_FOUND_MSG)
+        raise Exception(Plane.NO_NONZERO_ELTS_FOUND_MSG)
 
     def round(self,d):
         return round(d,3)
+
+    def is_parallel(self,p):
+        return  self.round_normal_vector().is_parallel(p.round_normal_vector())
 
     def round_normal_vector(self):
         if self.normal_vector is not Vector:
@@ -122,20 +121,20 @@ class Line(object):
             return Vector(coordinates)
         return self.normal_vector
 
-    def intersection(self,l):
+    def intersection(self,p):
         intersection = None
-        if self.dimension == 2:
-            if self.is_parallel(l) == False:
-                if self != l:
+        if self.dimension == 3:
+            if self.is_parallel(p) == False:
+                if self != p:
                     v1 = self.normal_vector
                     v2 = l.normal_vector
                     x = self.round((v2[1]*self.constant_term-v1[1]*l.constant_term)/(v1[0]*v2[1]-v1[1]*v2[0]))
                     y = self.round((-1*v2[0]*self.constant_term+v1[0]*l.constant_term)/(v1[0]*v2[1]-v1[1]*v2[0]))
                     intersection = [x,y]
                 else:
-                    print self.__str__() + " and " + l.__str__() + " are same line"
+                    print self.__str__() + " and " + p.__str__() + " are same plane"
             else:
-                print self.__str__()+" and "+l.__str__()+" are parallel line"
+                print self.__str__()+" and "+p.__str__()+" are parallel plane"
 
         return intersection
 
