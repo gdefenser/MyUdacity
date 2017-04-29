@@ -1,4 +1,4 @@
-
+import math
 def shape(M):
     return len(M[0]),len(M)
 
@@ -38,37 +38,70 @@ def matxMultiply(A, B):
             multiply.append(multiply_row)
     return multiply
 
-A = [[1,2,3],
-     [2,3,3],
+def augmentMatrix(A, b):
+    if len(A) == len(b):
+        for row in range(len(A)):
+            if len(b[row]) == 1:
+                A[row].append(b[row][0])
+            else:
+                return None
+        return A
+    return None
+
+def swapRows(M, r1, r2):
+    M[r1],M[r2] = M[r2],M[r1]
+
+def scaleRow(M, r, scale):
+    if scale != 0:
+        M[r] = [elm*scale for elm in M[r]]
+
+def addScaledRow(M, r1, r2, scale):
+    if scale != 0:
+        M[r1] = [elm1+elm2*scale for elm1,elm2 in zip(M[r1],M[r2])]
+
+
+def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
+    len_A = len(A)
+    len_b = len(b)
+    if len_A == len_b:
+        matrix = augmentMatrix(A,b)
+        for c in range(0,1):
+            max = findUnderDiagonalMaximumRow(matrix,c,len(matrix))
+            max_row = max[0]
+            max_col = max[1]
+            max_elm = max[2]
+            if max_elm == 0 :
+                return None
+            else:
+                swapRows(matrix,c,max_row)
+                s = -matrix[c][c]/max_elm
+                print s
+                scaleRow(matrix,max_row,s)
+                for row in range(len(matrix)):
+                    if c != row and matrix[row][c] != 0:
+                        addScaledRow(matrix,row,c,s)
+        return matrix
+    return None
+
+def findUnderDiagonalMaximumRow(A,col,row_range):
+    max = [0]*3
+    for row in range(col,row_range):
+        elm = abs(A[row][col])
+        if elm > abs(max[2]):
+            max[0] = row
+            max[1] = col
+            max[2] = elm
+    #print max
+    return max
+
+A = [[0,1,1],
+     [1,-1,1],
      [1,2,5]]
-B = [[1.333,2.444,3.555,5.666],
-     [2,3,3,5],
-     [1,2,5,1]]
-I = [[1,2,3,4],
-     [2,3,3,5],
-     [1,2,5,1],
-     [3,4,5,6]]
-#test the shape function
-print shape(A)
-#test the round function
-matxRound(B,2)
-#test the transpose funtion
-print transpose(B)
-#test the matxMultiply function, when the dimensions don't match
-I1 = [[1,2,3,4],
-      [4,5,6,7],
-      [8,9,10,11]]
-I2 = [[1,4,8],
-      [2,5,9],
-      [3,6,10],
-      [4,8,11]]
-print matxMultiply(I1,I2)
-#test the matxMultiply function, when the dimensions do match
-I3 = [[1,2,3,4,5],
-      [4,5,6,7],
-      [8,9,10,11]]
-I4 = [[1,4,8],
-      [2,5,9],
-      [3,6,10],
-      [4,8,11]]
-print matxMultiply(I3,I4)
+b = [[1],
+     [2],
+     [3]]
+
+Ab = gj_Solve(A,b)
+for row in range(len(Ab)):
+    print Ab[row]
+#print findUnderDiagonalMaximumRow(A,0,3)
