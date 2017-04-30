@@ -1,5 +1,6 @@
 import math
 from decimal import Decimal, getcontext
+from copy import deepcopy
 def shape(M):
     return len(M[0]),len(M)
 
@@ -54,20 +55,29 @@ def swapRows(M, r1, r2):
 
 def scaleRow(M, r, scale):
     if scale != 0:
-        M[r] = [elm*scale for elm in M[r]]
+        for c in range(len(M[r])):
+            M[r][c] *= scale
+            if M[r][c] == -0:
+                M[r][c] = 0
+        #M[r] = [elm*scale for elm in M[r]]
 
 def addScaledRow(M, r1, r2, scale):
     if scale != 0:
-        M[r1] = [elm1+elm2*scale for elm1,elm2 in zip(M[r1],M[r2])]
+        for c in range(len(M[r1])):
+            M[r1][c] = M[r1][c]+M[r2][c]*scale
+            if M[r1][c] == -0:
+                M[r1][c] = 0
+        #M[r1] = [elm1+elm2*scale for elm1,elm2 in zip(M[r1],M[r2])]
 
 def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
-    len_A = len(A)
-    len_b = len(b)
+    mA = deepcopy(A)
+    mb = deepcopy(b)
+    len_A = len(mA)
+    len_b = len(mb)
     if len_A == len_b:
-        matrix = augmentMatrix(A,b)
+        matrix = augmentMatrix(mA,mb)
         floatMatrix(matrix)
-        printMatrix(matrix)
-        for c in range(0,2):
+        for c in range(0,len(matrix)):
             max = findUnderDiagonalMaximumRow(matrix,c,len(matrix))
             max_row = max[0]
             max_col = max[1]
@@ -80,10 +90,10 @@ def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
                 scaleRow(matrix,c,s)
                 for row in range(len(matrix)):
                     if c != row and not isZero(matrix[row][c],epsilon):
-                        s_r = -matrix[c][c]/matrix[row][c]
+                        s_r = -matrix[row][c]/matrix[c][c]
                         addScaledRow(matrix,row,c,s_r)
         floatMatrix(matrix)
-        return matrix
+        return getResult(matrix)
     return None
 
 def floatMatrix(Ab,decPts=2):
@@ -94,7 +104,7 @@ def floatMatrix(Ab,decPts=2):
 def findUnderDiagonalMaximumRow(A,col,row_range):
     max = [0]*3
     for row in range(0,row_range):
-        if row > col:
+        if row >= col:
             elm = abs(A[row][col])
             if elm > abs(max[2]):
                 max[0] = row
@@ -105,19 +115,68 @@ def findUnderDiagonalMaximumRow(A,col,row_range):
 def isZero(value, eps):
     return abs(Decimal(value)) < eps
 
+def calculateAx(A,x):
+    Ax = []
+    for row in range(len(A)):
+        row_result = 0.0
+        for col in range(len(A[row])):
+            row_result += A[row][col]*x[col][0]
+        Ax.append([row_result])
+    return Ax
+
+def isEqual(Ax,b):
+    if len(Ax) == len(b):
+        for row in range(len(Ax)):
+            if float(Ax[row][0]) != float(b[row][0]):
+                return False
+    return True
+
+def getResult(Ab):
+    if Ab is not None:
+        result = []
+        for row in range(len(Ab)):
+            result.append([Ab[row][len(Ab[row])-1]])
+        return result
+    return None
+
 def printMatrix(Ab):
     for row in range(len(Ab)):
         print Ab[row]
-
+"""
 A = [[0,1,1],
      [1,-1,1],
      [1,2,5]]
 b = [[1],
      [2],
      [3]]
+     p1 = Plane(normal_vector=[1, 1, 1], constant_term=1)
+p2 = Plane(normal_vector=[0, 1, 0], constant_term=2)
+p3 = Plane(normal_vector=[1, 1, -1], constant_term=3)
+"""
 
-Ab = gj_Solve(A,b,2)
+A = [[1,1,1],
+     [0,-1,0],
+     [0,5,6]]
+b = [[1],
+     [2],
+     [2]]
+
+#Ab = gj_Solve(A,b)
+
+A2 = [[1,1,1],
+     [0,1,0],
+     [1,1,-1]]
+b2 = [[1],
+     [2],
+     [3]]
+
+
+x2 = gj_Solve(A2,b2)
+print x2
 print "=============="
-#print Ab
-printMatrix(Ab)
-print findUnderDiagonalMaximumRow(A,0,3)
+Ax2 = calculateAx(A2,x2)
+print Ax2
+print "=============="
+print isEqual(Ax2,b2)
+
+#print findUnderDiagonalMaximumRow(A,2,3)
