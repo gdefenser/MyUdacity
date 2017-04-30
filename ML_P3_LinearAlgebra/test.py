@@ -93,7 +93,7 @@ def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
                         s_r = -matrix[row][c]/matrix[c][c]
                         addScaledRow(matrix,row,c,s_r)
         floatMatrix(matrix)
-        return getResult(matrix)
+        return matrix
     return None
 
 def floatMatrix(Ab,decPts=2):
@@ -112,7 +112,7 @@ def findUnderDiagonalMaximumRow(A,col,row_range):
                 max[2] = float(elm)
     return max
 
-def isZero(value, eps):
+def isZero(value, eps=1.0e-16):
     return abs(Decimal(value)) < eps
 
 def calculateAx(A,x):
@@ -129,6 +129,18 @@ def isEqual(Ax,b):
         for row in range(len(Ax)):
             if float(Ax[row][0]) != float(b[row][0]):
                 return False
+    return True
+
+def isSingular(A,b):
+    d_matrix = gj_Solve(A,b)
+    if d_matrix is not None:
+        determinate = 1.0
+        for rc in range(len(d_matrix)):
+            determinate *= d_matrix[rc][rc]
+        if isZero(determinate) :
+            return True
+        else:
+            return False
     return True
 
 def getResult(Ab):
@@ -154,15 +166,14 @@ p2 = Plane(normal_vector=[0, 1, 0], constant_term=2)
 p3 = Plane(normal_vector=[1, 1, -1], constant_term=3)
 """
 
-A = [[1,1,1],
+# construct A and b where A is singular
+A1 = [[1,1,1],
      [0,-1,0],
-     [0,5,6]]
-b = [[1],
+     [0,0,0]]
+b1 = [[1],
      [2],
      [2]]
-
-#Ab = gj_Solve(A,b)
-
+# construct A and b where A is not singular
 A2 = [[1,1,1],
      [0,1,0],
      [1,1,-1]]
@@ -170,13 +181,5 @@ b2 = [[1],
      [2],
      [3]]
 
-
-x2 = gj_Solve(A2,b2)
-print x2
-print "=============="
-Ax2 = calculateAx(A2,x2)
-print Ax2
-print "=============="
-print isEqual(Ax2,b2)
-
-#print findUnderDiagonalMaximumRow(A,2,3)
+print isSingular(A1,b1)
+print isSingular(A2,b2)
