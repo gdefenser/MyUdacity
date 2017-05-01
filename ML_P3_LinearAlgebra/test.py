@@ -181,5 +181,5 @@ b2 = [[1],
      [2],
      [3]]
 
-print isSingular(A1,b1)
+print transpose(A1)
 print isSingular(A2,b2)
