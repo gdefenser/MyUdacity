@@ -1,6 +1,8 @@
 import math
 from decimal import Decimal, getcontext
 from copy import deepcopy
+import pprint
+
 def shape(M):
     return len(M[0]),len(M)
 
@@ -10,11 +12,14 @@ def matxRound(M, decPts=4):
             M[row][col] = round(M[row][col],decPts)
 
 def transpose(M):
+    m_shape = shape(M)
+    m_col_len = m_shape[0]
+    m_row_len = m_shape[1]
     t_M = []
-    for col in range(len(M[0])):
+    for col in range(m_col_len):
         n_row = []
-        for row in range(len(M)):
-            if len(M[row]) != len(M[0]):
+        for row in range(m_row_len):
+            if m_row_len != m_col_len:
                 return None
             else:
                 n_row.append(M[row][col])
@@ -76,12 +81,12 @@ def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
     len_b = len(mb)
     if len_A == len_b:
         matrix = augmentMatrix(mA,mb)
-        floatMatrix(matrix)
+        floatMatrix(matrix,decPts)
         for c in range(0,len(matrix)):
-            max = findUnderDiagonalMaximumRow(matrix,c,len(matrix))
-            max_row = max[0]
-            max_col = max[1]
-            max_elm = max[2]
+            max_d = findUnderDiagonalMaximumRow(matrix,c,len(matrix))
+            max_row = max_d[0]
+            max_col = max_d[1]
+            max_elm = max_d[2]
             if isZero(max_elm,epsilon):
                 return None
             else:
@@ -180,6 +185,38 @@ A2 = [[1,1,1],
 b2 = [[1],
      [2],
      [3]]
+A = [[1,2,3],
+     [2,3,3],
+     [1,2,5]]
+B = [[1.333,2.444,3.555,5.666],
+     [2,3,3,5],
+     [1,2,5,1]]
+I = [[1,2,3,4],
+     [2,3,3,5],
+     [1,2,5,1],
+     [3,4,5,6]]
 
-print transpose(A1)
-print isSingular(A2,b2)
+pp = pprint.PrettyPrinter(indent=1,width=20)
+pp.pprint(shape(A))
+
+matxRound(B,2)
+
+pp.pprint(transpose(B))
+
+I1 = [[1,2,3,4],
+      [4,5,6,7],
+      [8,9,10,11]]
+I2 = [[1,4,8],
+      [2,5,9],
+      [3,6,10],
+      [4,8,11]]
+pp.pprint(matxMultiply(I1,I2))
+
+I3 = [[1,2,3,4,5],
+      [4,5,6,7],
+      [8,9,10,11]]
+I4 = [[1,4,8],
+      [2,5,9],
+      [3,6,10],
+      [4,8,11]]
+pp.pprint(matxMultiply(I3,I4))
