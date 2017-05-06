@@ -556,6 +556,7 @@ pp.pprint(isEqual(Ax2,b2))
 # ### 向量证明过程
 # 
 # 因为已知
+# 
 # $$
 # X =  \begin{bmatrix}
 #     x_1 & 1 \\
@@ -573,6 +574,7 @@ pp.pprint(isEqual(Ax2,b2))
 # $$
 # 
 # 所以转置矩阵$X^T$为
+# 
 # $$
 # X^T =  \begin{bmatrix}
 #     x_1 & x_2 & ... & x_n \\
@@ -581,6 +583,7 @@ pp.pprint(isEqual(Ax2,b2))
 # $$
 # 
 # 所以相乘矩阵$X^TX$和$X^TY$分别为
+# 
 # $$
 # X^TX = \begin{bmatrix}
 #         \sum_{i=1}^{n}{x_i^2} & \sum_{i=1}^{n}{x_i}\\
@@ -594,6 +597,7 @@ pp.pprint(isEqual(Ax2,b2))
 # $$
 # 
 # 因为$h$为
+# 
 # $$
 # h = \begin{bmatrix}
 #         m\\
@@ -602,6 +606,7 @@ pp.pprint(isEqual(Ax2,b2))
 # $$
 # 
 # 所以$X^TXh$为
+# 
 # $$
 # X^TXh = \begin{bmatrix}
 #         \sum_{i=1}^{n}{x_i^2} & \sum_{i=1}^{n}{x_i}\\
@@ -620,6 +625,7 @@ pp.pprint(isEqual(Ax2,b2))
 # $$
 # 
 # 所以$2X^TXh-2X^TY$为
+# 
 # $$
 # 2\begin{bmatrix}
 #         (\sum_{i=1}^{n}{x_i^2})m+(\sum_{i=1}^{n}{x_i})b\\
@@ -669,6 +675,7 @@ pp.pprint(isEqual(Ax2,b2))
 # $$
 # 
 # 所以可得偏导向量
+# 
 # $$
 # \begin{bmatrix}
 #     \frac{\partial E}{\partial m} \\
@@ -683,6 +690,7 @@ pp.pprint(isEqual(Ax2,b2))
 # 
 # 
 # 所以可证明
+# 
 # $$
 # \begin{bmatrix}
 #     \frac{\partial E}{\partial m} \\

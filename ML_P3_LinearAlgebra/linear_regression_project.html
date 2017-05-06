@@ -12472,7 +12472,7 @@ E_b' = \sum_{i=1}^{n}{
 $$<p>所以所以b的偏导为</p>
 $$
 \frac{\partial E}{\partial b} = E_b' = \sum_{i=1}^{n}{-2(y_i-mx_i-b)} 
-$$<h3 id="&#21521;&#37327;&#35777;&#26126;&#36807;&#31243;">&#21521;&#37327;&#35777;&#26126;&#36807;&#31243;<a class="anchor-link" href="#&#21521;&#37327;&#35777;&#26126;&#36807;&#31243;">&#182;</a></h3><p>因为已知
+$$<h3 id="&#21521;&#37327;&#35777;&#26126;&#36807;&#31243;">&#21521;&#37327;&#35777;&#26126;&#36807;&#31243;<a class="anchor-link" href="#&#21521;&#37327;&#35777;&#26126;&#36807;&#31243;">&#182;</a></h3><p>因为已知</p>
 $$
 X =  \begin{bmatrix}
     x_1 & 1 \\
@@ -12487,15 +12487,13 @@ Y =  \begin{bmatrix}
     ... \\
     y_n
 \end{bmatrix}
-$$</p>
-<p>所以转置矩阵$X^T$为
+$$<p>所以转置矩阵$X^T$为</p>
 $$
 X^T =  \begin{bmatrix}
     x_1 & x_2 & ... & x_n \\
     1 & 1 & ... & 1
 \end{bmatrix}
-$$</p>
-<p>所以相乘矩阵$X^TX$和$X^TY$分别为
+$$<p>所以相乘矩阵$X^TX$和$X^TY$分别为</p>
 $$
 X^TX = \begin{bmatrix}
         \sum_{i=1}^{n}{x_i^2} & \sum_{i=1}^{n}{x_i}\\
@@ -12506,15 +12504,13 @@ X^TY = \begin{bmatrix}
         \sum_{i=1}^{n}{x_iy_i} \\
         \sum_{i=1}^{n}{y_i} 
 \end{bmatrix}
-$$</p>
-<p>因为$h$为
+$$<p>因为$h$为</p>
 $$
 h = \begin{bmatrix}
         m\\
         b
 \end{bmatrix}
-$$</p>
-<p>所以$X^TXh$为
+$$<p>所以$X^TXh$为</p>
 $$
 X^TXh = \begin{bmatrix}
         \sum_{i=1}^{n}{x_i^2} & \sum_{i=1}^{n}{x_i}\\
@@ -12524,24 +12520,23 @@ X^TXh = \begin{bmatrix}
         m\\
         b
 \end{bmatrix} 
-$$
-$$
+$$$$
 = \begin{bmatrix}
         (\sum_{i=1}^{n}{x_i^2})m+(\sum_{i=1}^{n}{x_i})b\\
         (\sum_{i=1}^{n}{x_i})m+(\sum_{i=1}^{n}{1})b
   \end{bmatrix}
-$$</p>
-<p>所以$2X^TXh-2X^TY$为
+$$<p>所以$2X^TXh-2X^TY$为</p>
 $$
 2\begin{bmatrix}
-        (\sum_{i=1}^{n}{x<em>i^2})m+(\sum</em>{i=1}^{n}{x<em>i})b\
-        (\sum</em>{i=1}^{n}{x<em>i})m+(\sum</em>{i=1}^{n}{1})b</p>
-<h2 id="--\end{bmatrix}-">  \end{bmatrix} <a class="anchor-link" href="#--\end{bmatrix}-">&#182;</a></h2><p>2\begin{bmatrix}
-        \sum_{i=1}^{n}{x_iy<em>i} \
-        \sum</em>{i=1}^{n}{y_i} 
+        (\sum_{i=1}^{n}{x_i^2})m+(\sum_{i=1}^{n}{x_i})b\\
+        (\sum_{i=1}^{n}{x_i})m+(\sum_{i=1}^{n}{1})b
+  \end{bmatrix} 
+-
+2\begin{bmatrix}
+        \sum_{i=1}^{n}{x_iy_i} \\
+        \sum_{i=1}^{n}{y_i} 
 \end{bmatrix}
-$$</p>
-$$
+$$$$
 =
 \begin{bmatrix}
         \sum_{i=1}^{n}{2mx_i^2+2bx_i}\\
@@ -12569,24 +12564,24 @@ $$
 \frac{\partial E}{\partial m} = \sum_{i=1}^{n}{-2x_i(y_i - mx_i - b)}
 $$$$
 \frac{\partial E}{\partial b} = \sum_{i=1}^{n}{-2(y_i-mx_i-b)}  
-$$<p>所以可得偏导向量
+$$<p>所以可得偏导向量</p>
 $$
 \begin{bmatrix}
-    \frac{\partial E}{\partial m} \
-    \frac{\partial E}{\partial b}</p>
-<h1 id="\end{bmatrix}-">\end{bmatrix} <a class="anchor-link" href="#\end{bmatrix}-">&#182;</a></h1>\begin{bmatrix}
+    \frac{\partial E}{\partial m} \\
+    \frac{\partial E}{\partial b} 
+\end{bmatrix} 
+= 
+\begin{bmatrix}
     \sum_{i=1}^{n}{-2x_i(y_i - mx_i - b)}\\
     \sum_{i=1}^{n}{-2(y_i-mx_i-b)}  
-\end{bmatrix}<p>
-$$</p>
-<p>所以可证明
+\end{bmatrix} 
+$$<p>所以可证明</p>
 $$
 \begin{bmatrix}
     \frac{\partial E}{\partial m} \\
     \frac{\partial E}{\partial b} 
 \end{bmatrix} = 2X^TXh - 2X^TY
-$$</p>
-
+$$
 </div>
 </div>
 </div>
