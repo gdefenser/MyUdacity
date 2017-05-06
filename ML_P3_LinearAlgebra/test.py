@@ -231,12 +231,29 @@ def getRandomPoints():
 def predict(points):
 
     pass
-h = linearRegression([[1,2],[3,4],[5,6]])
-print h
-points = getRandomPoints()
+h = linearRegression([[2,2],[3,3]])
+#print h
+a = [[2,1],
+     [3,1],
+     [4,1],
+     [5,1]
+     ]
+b = [[1],
+     [1],
+     [4],
+     [5]]
+h = [[2],
+     [3]]
+m_a = np.mat(a)
+m_b = np.mat(b)
+m_h = np.mat(h)
+print m_a.T*m_a
+print m_a.T*m_a*m_h
+#print np.linalg.det(array(b))
+#points = getRandomPoints()
 #print points
 #print np.mat(points)*h
-print linearRegression(points)
+#print linearRegression(points)
 
 
 
