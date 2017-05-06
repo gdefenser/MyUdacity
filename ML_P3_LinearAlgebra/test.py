@@ -2,9 +2,13 @@ import math
 from decimal import Decimal, getcontext
 from copy import deepcopy
 import pprint
+import numpy as np
 
 def shape(M):
-    return len(M[0]),len(M)
+    try:
+        return len(M),len(M[0])
+    except Exception:
+        return len(M),1
 
 def matxRound(M, decPts=4):
     for row in range(len(M)):
@@ -13,17 +17,18 @@ def matxRound(M, decPts=4):
 
 def transpose(M):
     m_shape = shape(M)
-    m_col_len = m_shape[0]
-    m_row_len = m_shape[1]
+    m_row_len = m_shape[0]
+    m_col_len = m_shape[1]
     t_M = []
+
     for col in range(m_col_len):
-        n_row = []
-        for row in range(m_row_len):
-            if m_row_len != m_col_len:
-                return None
-            else:
-                n_row.append(M[row][col])
-        t_M.append(n_row)
+        if m_row_len == 1 and (isinstance(M[col],int) or isinstance(M[col], float)):
+            t_M.append([M[col]])
+        else:
+            t_M_row = []
+            for row in range(m_row_len):
+                t_M_row.append(M[row][col])
+            t_M.append(t_M_row)
     return t_M
 
 def matxMultiply(A, B):
@@ -172,51 +177,66 @@ p3 = Plane(normal_vector=[1, 1, -1], constant_term=3)
 """
 
 # construct A and b where A is singular
-A1 = [[1,1,1],
-     [0,-1,0],
-     [0,0,0]]
-b1 = [[1],
-     [2],
-     [2]]
-# construct A and b where A is not singular
-A2 = [[1,1,1],
-     [0,1,0],
-     [1,1,-1]]
-b2 = [[1],
-     [2],
-     [3]]
-A = [[1,2,3],
-     [2,3,3],
-     [1,2,5]]
-B = [[1.333,2.444,3.555,5.666],
-     [2,3,3,5],
-     [1,2,5,1]]
-I = [[1,2,3,4],
-     [2,3,3,5],
-     [1,2,5,1],
-     [3,4,5,6]]
+points = [
+    [1,1]
+    ,[2,4]
+    ,[3,5]
+    ,[4,2]
+]
 
-pp = pprint.PrettyPrinter(indent=1,width=20)
-pp.pprint(shape(A))
 
-matxRound(B,2)
 
-pp.pprint(transpose(B))
+from sklearn import linear_model
 
-I1 = [[1,2,3,4],
-      [4,5,6,7],
-      [8,9,10,11]]
-I2 = [[1,4,8],
-      [2,5,9],
-      [3,6,10],
-      [4,8,11]]
-pp.pprint(matxMultiply(I1,I2))
+def linearRegression(points):
+    dp = getDimensionPoints(points)
 
-I3 = [[1,2,3,4,5],
-      [4,5,6,7],
-      [8,9,10,11]]
-I4 = [[1,4,8],
-      [2,5,9],
-      [3,6,10],
-      [4,8,11]]
-pp.pprint(matxMultiply(I3,I4))
+    matrix_X = np.mat(dp[0])
+    matrix_Y = np.mat(dp[1])
+    matrix_X_t = matrix_X.T
+    matrix_X_t_X = matrix_X_t*matrix_X
+    matrix_X_t_Y = matrix_X_t*matrix_Y
+
+    h = matrix_X_t_X.I*matrix_X_t_Y
+    """
+    matrix_X = dp[0]
+    matrix_Y = dp[1]
+    matrix_X_t = transpose(matrix_X)
+    matrix_X_t_X = matxMultiply(matrix_X_t,matrix_X)
+    matrix_X_t_X_i = inverse(matrix_X_t_X)
+    matrix_X_t_Y = matxMultiply(matrix_X_t,matrix_Y)
+    h = matrix_X_t_X_i
+    """
+    return h
+
+def getDimensionPoints(points):
+    x = []
+    y = []
+    for point in points:
+        x.append([point[0],1])
+        y.append([point[1]])
+    return x,y
+
+def inverse(matrix):
+    t=transpose(matrix)
+    return t
+
+import random
+def getRandomPoints():
+    points = []
+    for i in range(0,100):
+        points.append(random.shuffle([random.randint(0,100),random.randint(0,100)]))
+    return points
+
+def predict(points):
+
+    pass
+h = linearRegression([[1,2],[3,4],[5,6]])
+print h
+points = getRandomPoints()
+#print points
+#print np.mat(points)*h
+print linearRegression(points)
+
+
+
