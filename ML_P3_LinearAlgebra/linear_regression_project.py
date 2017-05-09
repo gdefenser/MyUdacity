@@ -5,7 +5,7 @@
 # 
 # ## 1.1 创建一个 4*4 的单位矩阵
 
-# In[28]:
+# In[15]:
 
 # 这个项目设计来帮你熟悉 python list 和线性代数
 # 你不能调用任何python库，包括NumPy，来完成作业
@@ -19,27 +19,27 @@ B = [[1,2,3,5],
      [1,2,5,1]]
 
 # 创建一个 4*4 单位矩阵
-I = [[1,2,3,4],
-     [2,3,3,5],
-     [1,2,5,1],
-     [3,4,5,6]]
+I = [[1,0,0,0],
+     [0,1,0,0],
+     [0,0,1,0],
+     [0,0,0,1]]
 
 
 # ## 1.2 返回矩阵的行数和列数
 
-# In[29]:
+# In[16]:
 
 # 返回矩阵的行数和列数
 def shape(M):
     try:
         return len(M),len(M[0])
     except Exception:
-        return len(M),1
+        raise 'Invalid matrix'
 
 
 # ## 1.3 每个元素四舍五入到特定小数数位
 
-# In[30]:
+# In[17]:
 
 # 每个元素四舍五入到特定小数数位
 # 直接修改参数矩阵，无返回值
@@ -51,29 +51,20 @@ def matxRound(M, decPts=4):
 
 # ## 1.4 计算矩阵的转置
 
-# In[31]:
+# In[18]:
 
 # 计算矩阵的转置
 def transpose(M):
     m_shape = shape(M)
     m_row_len = m_shape[0]
     m_col_len = m_shape[1]
-    t_M = []
-
-    for col in range(m_col_len):
-        if m_row_len == 1 and (isinstance(M[col],int) or isinstance(M[col], float)):
-            t_M.append([M[col]])
-        else:
-            t_M_row = []
-            for row in range(m_row_len):
-                t_M_row.append(M[row][col])
-            t_M.append(t_M_row)
+    t_M = [[M[row][col] for row in range(m_row_len)] for col in range(m_col_len)]
     return t_M
 
 
 # ## 1.5 计算矩阵乘法 AB
 
-# In[32]:
+# In[19]:
 
 # 计算矩阵乘法 AB，如果无法相乘则返回None
 def matxMultiply(A, B):
@@ -100,7 +91,7 @@ def matxMultiply(A, B):
 
 # **提示：** 你可以用`from pprint import pprint`来更漂亮的打印数据，详见[用法示例](http://cn-static.udacity.com/mlnd/images/pprint.png)和[文档说明](https://docs.python.org/2/library/pprint.html#pprint.pprint)。
 
-# In[33]:
+# In[20]:
 
 import pprint
 
@@ -123,7 +114,7 @@ matxRound(B,2)
 #测试1.4 计算矩阵的转置
 pp.pprint(transpose(B))
 #测试1.5 计算矩阵乘法AB，AB无法相乘
-I1 = [[1,2,3,4],
+I1 = [[1,2,3,4,5],
       [4,5,6,7],
       [8,9,10,11]]
 I2 = [[1,4,8],
@@ -132,7 +123,7 @@ I2 = [[1,4,8],
       [4,8,11]]
 pp.pprint(matxMultiply(I1,I2))
 #测试1.5 计算矩阵乘法AB，AB可以相乘
-I3 = [[1,2,3,4,5],
+I3 = [[1,2,3,4],
       [4,5,6,7],
       [8,9,10,11]]
 I4 = [[1,4,8],
@@ -167,17 +158,18 @@ pp.pprint(matxMultiply(I3,I4))
 #     ...    & ... & ... & ...& ...\\
 #     a_{n1}    & a_{n2} & ... & a_{nn} & b_{n} \end{bmatrix}$
 
-# In[34]:
+# In[21]:
 
 # 构造增广矩阵，假设A，b行数相同
 def augmentMatrix(A, b):
     if len(A) == len(b):
+        aM = deepcopy(A)
         for row in range(len(A)):
             if len(b[row]) == 1:
-                A[row].append(b[row][0])
+                aM[row].append(b[row][0])
             else:
                 return None
-        return A
+        return aM
     return None
 
 
@@ -186,7 +178,7 @@ def augmentMatrix(A, b):
 # - 把某行乘以一个非零常数
 # - 把某行加上另一行的若干倍：
 
-# In[35]:
+# In[22]:
 
 # r1 <---> r2
 # 直接修改参数矩阵，无返回值
@@ -201,6 +193,8 @@ def scaleRow(M, r, scale):
             M[r][c] *= scale
             if M[r][c] == -0:
                 M[r][c] = 0
+    else:
+        raise ValueError('Scale value can not be zero')
         #M[r] = [elm*scale for elm in M[r]]
 
 # r1 <--- r1 + r2*scale
@@ -211,6 +205,8 @@ def addScaledRow(M, r1, r2, scale):
             M[r1][c] = M[r1][c]+M[r2][c]*scale
             if M[r1][c] == -0:
                 M[r1][c] = 0
+    else:
+        raise ValueError('Scale value can not be zero')
         #M[r1] = [elm1+elm2*scale for elm1,elm2 in zip(M[r1],M[r2])]
 
 
@@ -239,7 +235,7 @@ def addScaledRow(M, r1, r2, scale):
 # ### 注：
 # 我们并没有按照常规方法先把矩阵转化为行阶梯形矩阵，再转换为化简行阶梯形矩阵，而是一步到位。如果你熟悉常规方法的话，可以思考一下两者的等价性。
 
-# In[36]:
+# In[23]:
 
 # 实现 Gaussain Jordan 方法求解 Ax = b
 
@@ -279,7 +275,7 @@ def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
                         s_r = -matrix[row][c]/matrix[c][c]
                         addScaledRow(matrix,row,c,s_r)
         floatMatrix(matrix)
-        return matrix
+        return getResult(matrix)
     return None
 
 def floatMatrix(Ab,decPts=2):
@@ -300,6 +296,12 @@ def findUnderDiagonalMaximumRow(A,col,row_range):
 
 def isZero(value, eps=1.0e-16):
     return abs(Decimal(value)) < eps
+
+def getResult(Ab):
+    if Ab is not None:
+        result = [[Ab[row][len(Ab[row])-1]] for row in range(len(Ab))]
+        return result
+    return None
 
 
 # ## 2.4 证明下面的命题：
@@ -380,7 +382,7 @@ def isZero(value, eps=1.0e-16):
 
 # ## 2.5 测试 gj_Solve() 实现是否正确
 
-# In[37]:
+# In[24]:
 
 from decimal import Decimal
 from copy import deepcopy
@@ -742,43 +744,26 @@ pp.pprint(isEqual(Ax2,b2))
 # 
 # ### 求解方程 $X^TXh = X^TY $, 计算线性回归的最佳参数 h
 
-# In[38]:
+# In[25]:
 
 # 实现线性回归
 '''
 参数：(x,y) 二元组列表
 返回：m，b
-
-此处我暂时以numpy计算，对于求矩阵的逆矩阵，我有点疑问，
-我能查到和学习到的内容，逆矩阵的定义的前提是可逆矩阵比为方阵，
-但对此回归时，点阵并不是方阵，这该如何求？
-麻烦提供下思路让我可以继续修改
 '''
 import numpy as np
 def linearRegression(points):
     dp = getDimensionPoints(points)
 
-    matrix_X = np.mat(dp[0])
-    matrix_Y = np.mat(dp[1])
-    matrix_X_t = matrix_X.T
-    matrix_X_t_X = matrix_X_t*matrix_X
-    matrix_X_t_Y = matrix_X_t*matrix_Y
+    matrix_X = np.array(dp[0])
+    matrix_Y = np.array(dp[1])
+    matrix_X_t = matrix_X.transpose()
+    matrix_X_t_X = matrix_X_t.dot(matrix_X)
+    matrix_X_t_Y = matrix_X_t.dot(matrix_Y)
 
-    h = matrix_X_t_X.I*matrix_X_t_Y
-    
-    """
-    matrix_X = dp[0]
-    matrix_Y = dp[1]
-    matrix_X_t = transpose(matrix_X)
-    matrix_X_t_X = matxMultiply(matrix_X_t,matrix_X)
-    matrix_X_t_X_i = inverse(matrix_X_t_X)
-    matrix_X_t_Y = matxMultiply(matrix_X_t,matrix_Y)
-    h = matrix_X_t_X_i*matrix_X_t_Y
-    """
+    h = np.linalg.inv(matrix_X_t_X).dot(matrix_X_t_Y)
     return h
-'''
-我此处这样设置是否正确
-'''
+
 def getDimensionPoints(points):
     x = []
     y = []
@@ -790,24 +775,55 @@ def getDimensionPoints(points):
 
 # ## 3.3 Test your linear regression implementation
 
-# In[39]:
+# In[26]:
 
+# 指定m,b
+m = 1
+b = 1
 # 构造线性函数
-h = linearRegression([[1,2],[3,4],[5,6]])
-# 构造 100 个线性函数上的点，加上适当的高斯噪音
+def calculateYBylinearFunction(x,m,b):
+    y = m*x+b
+    return y
+# random 100 个自然数列x
 import random
-def getRandomPoints():
-    points = []
+def getRandomX():
+    x = []
     for i in range(0,100):
-        points.append([random.randint(0,100),random.randint(0,100)])
+        x.append(random.randint(0,100))
+    return x
+X = getRandomX()
+# 计算出对应的y
+Y = []
+for x in X:
+    y = calculateYBylinearFunction(x,m,b)
+    Y.append(y)
+# 对y施加高斯噪音
+def randomY(Y):
+    for i in range(len(Y)):
+        Y[i] = round(random.uniform(Y[i],Y[i]+10),1)
+randomY(Y)
+# 对这100个点进行线性回归
+def getPoints(X,Y):
+    points=[]
+    for i in range(len(X)):
+        points.append([X[i],Y[i]])
     return points
 
-points = getRandomPoints()
-# 对这100个点进行线性回归，将线性回归得到的函数和原线性函数比较
-h = linearRegression([[1,2],[3,4],[5,6]])
-print h
-#print np.mat(points)*h
-print linearRegression(points)
+points = getPoints(X,Y)
+"""
+审阅意见是要求使用gj_solve求解m,b
+我有点不太理解，gj_solve理应是求Ax=b
+按我的理解，此处我们已经知道了加了高斯噪声的点(x,y)
+不是应该使用linearRegression求m和b吗
+还望提供更多意见，我好继续理解和修改，感谢
+"""
+h = linearRegression(points)
+# 将线性回归得到的函数和原线性函数比较
+l_m = h[0]
+l_b = h[1]
+
+print 'Before m :'+str(m)+' b :'+str(b)
+print 'After m : '+str(l_m)+' b :'+str(l_b)
 
 
 # In[ ]:

@@ -14,7 +14,7 @@ df_allstar = filterDfByLastTenYears(pd.read_csv(folder_path+'AllstarFull.csv'))
 df_batting = filterDfByLastTenYears(pd.read_csv(folder_path+'Batting.csv'))
 #read data-set of WSWin Teams
 df_teams = filterDfByLastTenYears(pd.read_csv(folder_path+'Teams.csv'))
-df_teams = df_teams[df_teams['WSWin']=='Y']
+#df_teams = df_teams[df_teams['WSWin']=='Y']
 
 
 df_merged_teams_batting = df_teams.merge(df_batting,on=['teamID'],how='inner')
@@ -23,5 +23,5 @@ df_merged_allstar_batting = df_allstar.merge(df_batting,on=['playerID'],how='lef
 #print len(df_batting)
 #print len(df_teams)
 
-print len(df_merged_teams_batting)
-print len(df_merged_allstar_batting)
+#print len(df_merged_teams_batting)
+#print len(df_merged_allstar_batting)
