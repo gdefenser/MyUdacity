@@ -220,8 +220,8 @@ def predict(points):
     pass
 
 
-m = 1
-b = 1
+m = 2
+b = 2
 
 def calculateYBylinearFunction(x,m,b):
     y = m*x+b
