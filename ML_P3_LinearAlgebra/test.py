@@ -8,7 +8,7 @@ def shape(M):
     try:
         return len(M),len(M[0])
     except Exception:
-        raise 'Invalid matrix'
+        raise TypeError('Invalid matrix')
 
 def matxRound(M, decPts=4):
     for row in range(len(M)):
@@ -45,15 +45,13 @@ def matxMultiply(A, B):
     return multiply
 
 def augmentMatrix(A, b):
-    if len(A) == len(b):
-        aM = deepcopy(A)
-        for row in range(len(A)):
-            if len(b[row]) == 1:
-                aM[row].append(b[row][0])
-            else:
-                return None
-        return aM
-    return None
+    aM = deepcopy(A)
+    for row in range(len(A)):
+        if len(b[row]) == 1:
+            aM[row].append(b[row][0])
+        else:
+            return None
+    return aM
 
 def swapRows(M, r1, r2):
     M[r1],M[r2] = M[r2],M[r1]
@@ -62,8 +60,6 @@ def scaleRow(M, r, scale):
     if scale != 0:
         for c in range(len(M[r])):
             M[r][c] *= scale
-            if M[r][c] == -0:
-                M[r][c] = 0
         #M[r] = [elm*scale for elm in M[r]]
     else:
         raise ValueError('Scale value can not be zero')
@@ -72,8 +68,6 @@ def addScaledRow(M, r1, r2, scale):
     if scale != 0:
         for c in range(len(M[r1])):
             M[r1][c] = M[r1][c]+M[r2][c]*scale
-            if M[r1][c] == -0:
-                M[r1][c] = 0
     else:
         raise ValueError('Scale value can not be zero')
         #M[r1] = [elm1+elm2*scale for elm1,elm2 in zip(M[r1],M[r2])]
@@ -162,9 +156,9 @@ def printMatrix(Ab):
     for row in range(len(Ab)):
         print Ab[row]
 
-A = [[0,1,1],
-     [1,-1,1],
-     [1,2,5]]
+A = [[1,1,1],
+     [0,1,0],
+     [1,1,-1]]
 b = [[1],
      [2],
      [3]]
@@ -175,13 +169,14 @@ p3 = Plane(normal_vector=[1, 1, -1], constant_term=3)
 """
 
 
-
 # construct A and b where A is singular
 points = [
     [1,1]
     ,[2,4]
     ,[3,5]
     ,[4,2]
+    ,[5,6]
+    ,[7,8]
 ]
 
 
@@ -191,13 +186,12 @@ from sklearn import linear_model
 def linearRegression(points):
     dp = getDimensionPoints(points)
 
-    matrix_X = np.array(dp[0])
-    matrix_Y = np.array(dp[1])
-    matrix_X_t = matrix_X.transpose()
-    matrix_X_t_X = matrix_X_t.dot(matrix_X)
-    matrix_X_t_Y = matrix_X_t.dot(matrix_Y)
-
-    h = np.linalg.inv(matrix_X_t_X).dot(matrix_X_t_Y)
+    matrix_X = dp[0]
+    matrix_Y = dp[1]
+    matrix_X_t = transpose(matrix_X)
+    matrix_X_t_X = matxMultiply(matrix_X_t,matrix_X)
+    matrix_X_t_Y = getResult(matxMultiply(matrix_X_t,matrix_Y))
+    h = gj_Solve(matrix_X_t_X,matrix_X_t_Y)
     return h
 
 
@@ -207,7 +201,7 @@ def getDimensionPoints(points):
     y = []
     for point in points:
         x.append([point[0],1])
-        y.append([point[1]])
+        y.append([0,point[1]])
     return x,y
 
 def inverse(matrix):
@@ -217,7 +211,7 @@ def inverse(matrix):
 import random
 def getRandomX():
     x = []
-    for i in range(0,100):
+    for i in range(0,100000):
         x.append(random.randint(0,100))
     return x
 
@@ -225,16 +219,18 @@ def predict(points):
 
     pass
 
+
 m = 1
-b = 0.5
+b = 1
 
 def calculateYBylinearFunction(x,m,b):
     y = m*x+b
     return y
 
+import random
 def getRandomX():
     x = []
-    for i in range(0,100):
+    for i in range(0,1000):
         x.append(random.randint(0,100))
     return x
 X = getRandomX()
@@ -246,7 +242,8 @@ for x in X:
 
 def randomY(Y):
     for i in range(len(Y)):
-        Y[i] = round(random.uniform(Y[i],Y[i]+10),1)
+        Y[i] += random.random()
+randomY(Y)
 
 def getPoints(X,Y):
     points=[]
@@ -254,28 +251,16 @@ def getPoints(X,Y):
         points.append([X[i],Y[i]])
     return points
 
-print X
-print Y
-randomY(Y)
-print Y
-
 points = getPoints(X,Y)
-h=linearRegression(points)
-print h
+h = linearRegression(points)
 
-a = [[2,1],
-     [3,1],
-     [4,1],
-     [5,1]
-     ]
-b = [[1],
-     [1],
-     [4],
-     [5]]
-h = [[2],
-     [3]]
-h = linearRegression(a)
-#print h
+l_m = h[0]
+l_b = h[1]
+
+print 'Before m :'+str(m)+' b :'+str(b)
+print 'After m : '+str(l_m)+' b :'+str(l_b)
+
+
 
 
 
