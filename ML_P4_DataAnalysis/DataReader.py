@@ -14,6 +14,8 @@ df_allstar = filterDfByLastTenYears(pd.read_csv(folder_path+'AllstarFull.csv'))
 df_batting = filterDfByLastTenYears(pd.read_csv(folder_path+'Batting.csv'))
 #read data-set of WSWin Teams
 df_teams = filterDfByLastTenYears(pd.read_csv(folder_path+'Teams.csv'))
+# read data-set of Pitching
+df_pitching = filterDfByLastTenYears(pd.read_csv(folder_path+'Pitching.csv'))
 #df_teams = df_teams[df_teams['WSWin']=='Y']
 
 #print len(df_allstar)
@@ -34,11 +36,15 @@ def printDiscrtption(df):
     print df.std()
 
 
-def drawGrid(x1_set,y1_set,x2_set,y2_set,label_1,label_2):
-    plt.plot(x1_set, y1_set, 'r', label=label_1)
-    plt.plot(x2_set, y2_set, 'b', label=label_2)
+def drawGrid(set1,set2,x_key,y_key,label_1,label_2):
+    plt.plot(set1[x_key], set1[y_key], 'r', label=label_1)
+    plt.plot(set2[x_key], set2[y_key], 'b', label=label_2)
     plt.legend(bbox_to_anchor=[0.4, 1])
+    ax = plt.gca()
+    ax.set_ylabel(y_key)
+    ax.set_xlabel(x_key)
     plt.grid()
+
 
 def calculateWinRate(df_teams_row):
     return float(df_teams_row.W) / float(df_teams_row.W+df_teams_row.L)
@@ -50,28 +56,21 @@ def calculateHitRate(df_lan_batting_row):
         return float(df_lan_batting_row.H) / float(df_lan_batting_row.AB)
 
 df_batting['HitRate'] = df_batting.apply(calculateHitRate,axis=1)
-df_lan_batting = df_batting[df_batting['teamID']=='LAN']
-df_lan_allstar_batting = df_allstar.merge(df_lan_batting,on=['yearID','teamID','playerID'],how='inner')
+
+df_lan_b = df_batting[df_batting['teamID']=='LAN']
+df_lan_p = df_pitching[df_pitching['teamID']=='LAN']
+df_lan_bp = df_lan_b.merge(df_lan_p,on=['yearID','teamID','playerID'],how='left')
+df_lan_bp.fillna(0)
+
+df_lan_allstar_bp = df_allstar.merge(df_lan_bp,on=['yearID','teamID','playerID'],how='inner')
 
 
-df_analysis_lan_batting = df_lan_batting.groupby(['yearID'])['yearID','H','AB','HitRate','HR','SO','SB']
-df_analysis_lan_allstar_batting = df_lan_allstar_batting.groupby(['yearID'])[['yearID','H','AB','HitRate','HR','SO','SB']]
+df_analysis_lan_bp = df_lan_bp.groupby(['yearID'])['yearID','H_x','AB','HitRate','HR_x','SO_x','H_y']
+df_analysis_lan_allstar_bp = df_lan_allstar_bp.groupby(['yearID'])[['yearID','H_x','AB','HitRate','HR_x','SO_x','H_y']].mean()
 
-#var = df.groupby(['BMI', 'Gender']).Sales.sum()
-#var.unstack().plot(kind='bar', stacked=True, color=['red', 'blue'])
-#var.unstack().plot(kind='bar', stacked=True, color=['red', 'blue'])
-#plt.show()
-def bulidYearRdsDf(df_lan_allstar_batting,df_analysis_lan_allstar_batting):
-    df_year_rds = pd.DataFrame(data={
-            'all_players':df_analysis_lan_batting.count()['yearID'],
-            'all_star_players':df_analysis_lan_allstar_batting.count()['yearID']
-        }
-    )
-    return df_year_rds
+df_lan_allstar_2008 = df_allstar[(df_allstar['yearID']==2008) & (df_allstar['teamID']=='LAN')]
+print df_lan_allstar_2008
+df_lan_p_2008 = df_lan_p[(df_lan_p['yearID']==2008) & (df_lan_p['playerID']=='martiru01')]
+print len(df_lan_p_2008)
+#print len(df_lan_allstar_batting_pitching)
 
-#print df_analysis_lan_batting.plot(kind='bar', stacked=True, color=['red', 'blue'])
-#print pd.concat([df_lan_allstar_batting.count()['H'], df_analysis_lan_batting.count()['AB']], axis=1,
-              #  join_axes=[df_analysis_lan_batting.mean().index])
-    #bulidYearRdsDf(df_analysis_lan_batting)
-
-print bulidYearRdsDf(df_analysis_lan_batting,df_analysis_lan_allstar_batting)
