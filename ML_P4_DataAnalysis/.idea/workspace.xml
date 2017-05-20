@@ -60,10 +60,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="64" />
-    <option name="y" value="-11" />
-    <option name="width" value="1761" />
-    <option name="height" value="1014" />
+    <option name="x" value="65" />
+    <option name="y" value="-4" />
+    <option name="width" value="1759" />
+    <option name="height" value="1006" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -291,7 +291,7 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="64" y="-11" width="1761" height="1014" extended-state="6" />
+    <frame x="65" y="-4" width="1759" height="1006" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24957362" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
