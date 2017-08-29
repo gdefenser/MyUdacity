@@ -45,8 +45,8 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = 1.0/(1.0*math.pow(self.trial,2))
-            self.alpha = 0.04
+            self.epsilon = math.exp(-0.01*self.trial)
+            self.alpha = 0.5
             self.trial += 1
         return None
 
@@ -62,7 +62,7 @@ class LearningAgent(Agent):
         ########### 
         ## TO DO ##
         ###########
-        state = (waypoint,inputs['left'],inputs['right'],inputs['oncoming'])
+        state = (waypoint,inputs['light'],inputs['left'],inputs['right'],inputs['oncoming'])
         return state
 
 
@@ -74,8 +74,6 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        for actions in self.Q[state]:
-            print actions
         maxQ = max(self.Q[state].values())
         return maxQ
 
@@ -115,11 +113,14 @@ class LearningAgent(Agent):
         if not self.learning:
             action = random.choice(self.valid_actions)
         else:
-            maxQ = self.get_maxQ(state)
-            for key,value in self.Q[state].items():
-                if value == maxQ:
-                    action = key
-                    break
+            if random.random() < self.epsilon:
+                action = random.choice(self.valid_actions)
+            else:
+                maxQ = self.get_maxQ(state)
+                for key,value in self.Q[state].items():
+                    if value == maxQ:
+                        action = key
+                        break
         return action
 
 
@@ -193,7 +194,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(tolerance=0.05,n_test=10)
+    sim.run(tolerance=0.05,n_test=25)
 
 
 if __name__ == '__main__':
