@@ -11836,7 +11836,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># 检查你的Python版本</span>
@@ -11852,7 +11852,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Import the visualization code</span>
@@ -11903,7 +11903,7 @@ div#notebook {
 
 代理每运行一次，获得了一个基于该次动作所得到的评分作为奖励系数
 
-当红灯时，将扣减奖励系数（即红灯时获得负奖励系数）；绿灯时，如行动方向有车，将扣减奖励系数（即红灯时获得负奖励系数），如行动方向没车，将增加奖励系数（即绿灯时获得正奖励系数）</code></pre>
+当智能位于路口时，对于其决策，当遇到红灯时，如智能车不动，将获得负奖励系数，否则获得正奖励系数；当遇到绿灯时，如智能车行动，将获得正奖励系数，否则获得负奖励系数；</code></pre>
 
 </div>
 </div>
@@ -11977,7 +11977,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_no-learning&#39; log file from the initial simulation results</span>
@@ -13173,7 +13173,7 @@ qsQJlpmZmZmZWZU4wTIzMzMzM6sSJ1hmZmZmZmZV8v8BoLpTDBnXcTsAAAAASUVORK5CYII=
 
 特征left，right及oncoming是标识智能出租车在行驶过程中对应方向有没有其他车辆，这与行驶安全性和效率十分相关，故适合作为建模特征
 
-特征deadline是标识到达目的地还有多少剩余动作，而由于小车在模拟中的起点和目的地不停地改变，且其在运行过程中waypoint和inputs中的各个参数影响了小车到达目的地的效率，因此该特征是一个小车运行的因变量，它的改变并不能更说明小车是被什么变量影响，不是我们需要建模的自变量，故不适合作为建模特征</code></pre>
+特征deadline是标识到达目的地还有多少剩余动作，而由于小车在模拟中的起点和目的地不停地改变，且其在运行过程中waypoint和inputs中的各个参数影响了小车到达目的地的效率，因此该特征是一个小车运行的因变量，且由于智能车的起点和终点是不断变化，其可取值因此没有固定值，即deadline的值有可能有无限个，如将之考虑为可用特征，将造成Q table空间过大，不利于搜索性能，故不适合作为建模特征</code></pre>
 
 </div>
 </div>
@@ -13217,7 +13217,7 @@ right：left，right，forward，none
 
 oncoming：left，right，forward，none
 
-因此，针对4种特征，共有2*3*4*4*4=384种特征组合，由于一个状态列表可以有无限个状态，因此可存在一个包含无限个状态的状态列表，也是说，经过合理的训练后，代理驾驶程序是可以学习到一个较好的策略</code></pre>
+因此，针对4种特征，共有2*3*4*4*4=384种特征组合，由于一个状态列表可以有无限个state，因此可存在一个包含无限个state的Q-table，也是说，经过合理的训练后，代理驾驶程序是可以学习到一个较好的策略</code></pre>
 
 </div>
 </div>
@@ -13277,7 +13277,7 @@ $$ \epsilon_{t+1} = \epsilon_{t} - 0.05, \hspace{10px}\textrm{for trial number }
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_default-learning&#39; file from the default Q-Learning simulation</span>
@@ -14523,7 +14523,7 @@ $$ \epsilon = a^t, \textrm{for } 0 &lt; a &lt; 1 \hspace{50px}\epsilon = \frac{1
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_improved-learning&#39; file from the improved Q-Learning simulation</span>
@@ -16413,7 +16413,7 @@ zrmUeILlnHPOOeeccyn5/yJ/csoOQeFYAAAAAElFTkSuQmCC
 <p><strong>回答：</strong></p>
 <p>1）我对epsilon使用的衰减函数为$$ epsilon = e^{-0.01t}$$</p>
 <p>2）在程序进行测试前，进行了300次训练试验</p>
-<p>3）我tolerance的值设置成0.05，alpha设置成0.6，之所以这样设置，是因为tolerance作为程序结束训练进行测试的阀值，我希望程序以较高的学习率进行更多次的训练，才开始测试</p>
+<p>3）我tolerance的值设置成0.05，alpha设置成0.6，之所以这样设置，是因为tolerance作为程序结束训练进行测试的阀值，我希望程序以更偏向于新的尝试的学习率进行更多次的训练，以发现更多的未知action训练，才开始测试</p>
 <p>4）和默认的学习器相比，这个学习器会根据最大的Q-Value选择最优的动作，也就是学习器会根据之前的经验选择更佳的决策，从而获得较高的安全性和可靠性评分</p>
 <p>5）我不会认为我的学习器已经学习到合适的策略，因为学习器只进行了300次训练，远远少于所能遇到的所有情况的次数，若遇到更多未学习的状态，其表现结果不一定能维持当前的评分结果</p>
 <p>6）如果光指本次运行的评分结果，我对安全性A+和可靠性A+的评分是相对较满意的</p>
@@ -16465,7 +16465,7 @@ zrmUeILlnHPOOeeccyn5/yJ/csoOQeFYAAAAAElFTkSuQmCC
 
 </code></pre>
 <p>此状态中，车子应该往右走，遇到了绿灯，左方车辆要向左转，右方和前方并没有其他车辆，也就是该车子往右走的同时，只有左侧车辆往左转，并且是处于绿灯状态，因此该状态的策略符合法律规定，是一个正确的策略</p>
-<p>而针对所有策略，我们都希望这些策略能遵循“红灯停，绿灯有对方车辆停，绿灯无对方车辆行走”的最优策略运行，这样，小车就能在不出事故的前提下，能正确到达目的地，很显然，在这次的训练和测试中，我们并不能完完全全遇到这种理想情况，因此，这些策略并不是能使得小车可安全高效行驶的策略，我们应让小车学习更多的策略，以达到上述理想状态为最终目的</p>
+<p>而针对智能车来说，我们期望的，是它不仅能够在遇到交通灯颜色或者行动方向上是否有来车等法律法规时能做出安全正确的选择，更能会在保证这些选择的正确的前提上，可根据自身及环境，学习出更有效率，且能在遇到未知状况时可作出正确的决策，很显然，在这次的训练和测试中，我们并不能完完全全能让小车可学习到足够的决策，因此，这些策略并不一定是能使得小车可安全高效行驶的最佳策略，我们应让小车学习更多的策略，以达到及可验证上述理想状态为最终目的</p>
 
 </div>
 </div>
@@ -16500,9 +16500,9 @@ zrmUeILlnHPOOeeccyn5/yJ/csoOQeFYAAAAAElFTkSuQmCC
 $$ Q(s_t,a_t) = Q(s_t,a_t)_{old} + a *(r_t + r * maxQ(s_{t+1},a) -  Q(s_t,a_t)_{old}) $$
 <pre><code>可得知，当折扣因子存在时，将使得每次更新的探索因子的值变动范围更加大，而针对这个项目中
 
-智能出租车本身，其是以保证安全和效率为前提，如果探索因子变动浮动太大，将会造成出租车会过早完成训练而开始测试，本身将会忽略一些状态的学习，造成以学习不足的情况即开始训练，使其最后的安全和效率大大降低
+智能出租车本身，程序只知道目的地的大致方向，而具体距离目的地还有多少action，会因车子运行环境不同而有不同的结果，因此如gamma存在，会使得探索因子变动浮动增大，使程序偏向于更高奖励的action，将会使得智能车更依靠已知的action，这将降低其对未知状态的学习效果
 
-而对于出租车的运行环境，一辆车在行驶的过程中，将有其他的车辆同时行驶，且在交通灯变换的环境下，将使得智能出租车遇到更多不同的状态，如探索因子更新过快，将使得出租车很难知道下一步的状态是什么，因此未来因子的作用在此项目中也不太明显了</code></pre>
+而对于智能车的运行环境，其起点和终点并不是固定的，如使用gamma，将会使得智能车在做当前决策时，更加受到上次模拟的起点和终点影响，并使得智能车认为自己离终点更近，将使得智能车更依靠已知的起点和终点，因此未来因子的作用在此项目中也不太明显了</code></pre>
 
 </div>
 </div>
