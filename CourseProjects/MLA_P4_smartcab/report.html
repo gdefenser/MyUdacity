@@ -11836,7 +11836,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<<<<<<< HEAD
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
+=======
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># 检查你的Python版本</span>
@@ -11852,7 +11856,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<<<<<<< HEAD
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
+=======
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Import the visualization code</span>
@@ -11903,7 +11911,11 @@ div#notebook {
 
 代理每运行一次，获得了一个基于该次动作所得到的评分作为奖励系数
 
+<<<<<<< HEAD
 当智能位于路口时，对于其决策，当遇到红灯时，如智能车不动，将获得负奖励系数，否则获得正奖励系数；当遇到绿灯时，如智能车行动，将获得正奖励系数，否则获得负奖励系数；</code></pre>
+=======
+当智能车位于路口时，对于其决策，当遇到红灯时，如智能车不动，将获得正奖励系数；当遇到绿灯时且智能车不动，如行动方向无车，将获得负奖励系数,如行动方向有车,将获得正奖励系数</code></pre>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 
 </div>
 </div>
@@ -11977,7 +11989,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<<<<<<< HEAD
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
+=======
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_no-learning&#39; log file from the initial simulation results</span>
@@ -13217,7 +13233,11 @@ right：left，right，forward，none
 
 oncoming：left，right，forward，none
 
+<<<<<<< HEAD
 因此，针对4种特征，共有2*3*4*4*4=384种特征组合，由于一个状态列表可以有无限个state，因此可存在一个包含无限个state的Q-table，也是说，经过合理的训练后，代理驾驶程序是可以学习到一个较好的策略</code></pre>
+=======
+因此，针对4种特征，共有2*3*4*4*4=384种action组合，由于一个状态列表可以有无限state，因此可存在一个包含无限个state的Q-table，也是说，经过合理的训练后，代理驾驶程序是可以学习到一个较好的策略</code></pre>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 
 </div>
 </div>
@@ -13277,7 +13297,11 @@ $$ \epsilon_{t+1} = \epsilon_{t} - 0.05, \hspace{10px}\textrm{for trial number }
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<<<<<<< HEAD
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
+=======
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_default-learning&#39; file from the default Q-Learning simulation</span>
@@ -14523,7 +14547,11 @@ $$ \epsilon = a^t, \textrm{for } 0 &lt; a &lt; 1 \hspace{50px}\epsilon = \frac{1
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<<<<<<< HEAD
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
+=======
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the &#39;sim_improved-learning&#39; file from the improved Q-Learning simulation</span>
@@ -16465,7 +16493,11 @@ zrmUeILlnHPOOeeccyn5/yJ/csoOQeFYAAAAAElFTkSuQmCC
 
 </code></pre>
 <p>此状态中，车子应该往右走，遇到了绿灯，左方车辆要向左转，右方和前方并没有其他车辆，也就是该车子往右走的同时，只有左侧车辆往左转，并且是处于绿灯状态，因此该状态的策略符合法律规定，是一个正确的策略</p>
+<<<<<<< HEAD
 <p>而针对智能车来说，我们期望的，是它不仅能够在遇到交通灯颜色或者行动方向上是否有来车等法律法规时能做出安全正确的选择，更能会在保证这些选择的正确的前提上，可根据自身及环境，学习出更有效率，且能在遇到未知状况时可作出正确的决策，很显然，在这次的训练和测试中，我们并不能完完全全能让小车可学习到足够的决策，因此，这些策略并不一定是能使得小车可安全高效行驶的最佳策略，我们应让小车学习更多的策略，以达到及可验证上述理想状态为最终目的</p>
+=======
+<p>而针对智能车来说，我们期望的，是当它遇到未学习的情况时，不仅能够在按照法律法规的要求能做出安全正确的选择，更能会在保证这些选择的正确并能安全到达终点的前提上，可根据自身及环境，判断出更灵活的策略。很显然，在这次的训练和测试中，我们并不能完完全全遇到这种理想情况，因此，这些策略并不是能使得小车可安全高效行驶的策略，我们应让小车学习更多的策略，以达到上述理想状态为最终目的</p>
+>>>>>>> d2cb6d704e52df996f70086be1c0f64ac09dcca7
 
 </div>
 </div>

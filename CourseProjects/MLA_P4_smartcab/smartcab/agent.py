@@ -36,7 +36,7 @@ class LearningAgent(Agent):
         self.planner.route_to(destination)
         
         ########### 
-        ## TO DO ##
+        ## TO DO ##test
         ###########
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
