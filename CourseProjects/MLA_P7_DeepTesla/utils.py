@@ -399,7 +399,6 @@ def get_model():
     """
     model_path = join_dir(params.model_dir, 'model.json')
     param_path = join_dir(params.model_dir, 'model.h5')
-    
     if os.path.exists(model_path):
         ch = input('Model already exists, do you want to reuse? (y/n): ')
         if ch == 'y' or ch == 'Y':

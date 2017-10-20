@@ -17,7 +17,7 @@ import params ## you can modify the content of params.py
 ## Test epoch
 epoch_ids = [10]
 ## Load model
-#model = utils.get_model()
+model = utils.get_model()
 
 ## Preprocess
 def img_pre_process(img):
@@ -50,11 +50,12 @@ for epoch_id in epoch_ids:
     for frame_id in range(frame_count):
         ret, img = cap.read()
         assert ret
+        if model != None:
         ## you can modify here based on your model
-        img = img_pre_process(img)
-        img = img[None,:,:,:]
-        deg = float(model.predict(img, batch_size=1))
-        machine_steering.append(deg)
+            img = img_pre_process(img)
+            img = img[None,:,:,:]
+            deg = float(model.predict(img, batch_size=1))
+            machine_steering.append(deg)
 
     cap.release()
 
