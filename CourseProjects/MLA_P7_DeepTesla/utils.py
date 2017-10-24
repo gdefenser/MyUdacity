@@ -196,6 +196,7 @@ def visualize(epoch_id, machine_steering, out_dir, perform_smoothing=False,
               verbose=False, verbose_progress_step = 100, frame_count_limit = None):
     epoch_dir = params.data_dir
     human_steering = get_human_steering(epoch_id)
+    print(len(human_steering) , len(machine_steering))
     assert len(human_steering) == len(machine_steering)
 
     # testing: artificially magnify steering to test steering wheel visualization
@@ -397,6 +398,7 @@ def get_model():
     """
     Check if a model already exists
     """
+    model = None
     model_path = join_dir(params.model_dir, 'model.json')
     param_path = join_dir(params.model_dir, 'model.h5')
     if os.path.exists(model_path):
