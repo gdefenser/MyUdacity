@@ -15,7 +15,7 @@ import utils
 import params ## you can modify the content of params.py
 
 ## Test epoch
-epoch_ids = [10]
+epoch_ids = [1]
 ## Load model
 model = utils.get_model()
 
@@ -26,13 +26,39 @@ def img_pre_process(img):
     :param img: The image to be processed
     :return: Returns the processed image
     """
+    img = change_color_space(img)
+    img = translate(img)
+    img = resize(img)
+
     ## Chop off 1/3 from the top and cut bottom 150px(which contains the head of car)
-    shape = img.shape
-    img = img[int(shape[0]/3):shape[0]-150, 0:shape[1]]
+    #shape = img.shape
+    #img = img[int(shape[0]/3):shape[0]-150, 0:shape[1]]
     ## Resize the image
-    img = cv2.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h), interpolation=cv2.INTER_AREA)
+   # img = cv2.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h), interpolation=cv2.INTER_AREA)
     ## Return the image sized as a 4D array
     return np.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h, params.FLAGS.img_c))
+
+
+def change_color_space(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    img = cv2.cvtColor(img, cv2.COLOR_HSV2RGB)
+    img[:, :, 2] = img[:, :, 2] *np.random.uniform(0.1,1)
+    return img
+
+def translate(img):
+    offset_x = np.random.uniform(1,img.shape[1]/10)
+    offset_y = np.random.uniform(1,img.shape[0]/10)
+    offset = np.float32([[1, 0, offset_x], [0, 1, offset_y]])
+    img = cv2.warpAffine(img, offset, (img.shape[1], img.shape[0]))
+    return img
+
+def resize(img):
+    d_x = np.random.randint(1,200)
+    d_y = np.random.randint(1,200)
+    img = cv2.resize(src=img,dsize=(d_x,d_y),interpolation=cv2.INTER_AREA)
+    return img
+
+
 
 
 ## Process video

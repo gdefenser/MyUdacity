@@ -86,7 +86,7 @@ def frame_count(path, method='ffmpeg'):
 
 ##     
 def ffmpeg_frame_count(path):
-    cmd = 'ffmpeg -i {} -vcodec copy -acodec copy -f null /dev/null 2>&1'.format(path)
+    cmd = 'ffmpeg -i {} -vcodec copy -acodec copy -f null {} 2>&1'.format(path,params.temp_dir)
     cmd_res = sp.check_output(cmd, shell=True)
     cmd_res = copy.deepcopy(cmd_res)
 
@@ -125,10 +125,10 @@ def mkv_to_mp4(mkv_path, remove_mkv=False):
     
     if os.path.isfile(mp4_path):
         os.remove(mp4_path)
-    
-    cmd = 'ffmpeg -i {} -c:v copy -c:a libfdk_aac -b:a 128k {} >/dev/null 2>&1'.format(mkv_path, mp4_path)
+    print(mp4_path)
+    cmd = 'ffmpeg -i {} -c:v copy -c:a libfdk_aac -b:a 128k {} >{} 2>&1'.format(mkv_path,params.temp_dir, mp4_path)
     sp.call(cmd, shell=True)
-
+   
     assert os.path.isfile(mp4_path) # make sure that the file got generated successfully
 
     if remove_mkv:
@@ -196,7 +196,6 @@ def visualize(epoch_id, machine_steering, out_dir, perform_smoothing=False,
               verbose=False, verbose_progress_step = 100, frame_count_limit = None):
     epoch_dir = params.data_dir
     human_steering = get_human_steering(epoch_id)
-    print(len(human_steering) , len(machine_steering))
     assert len(human_steering) == len(machine_steering)
 
     # testing: artificially magnify steering to test steering wheel visualization
