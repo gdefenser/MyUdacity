@@ -133,7 +133,7 @@ def mkv_to_mp4(mkv_path, remove_mkv=False):
 
     if remove_mkv:
         assert os.path.isfile(mkv_path)
-        os.remove(mkv_path)
+       # os.remove(mkv_path)
 ##
 def video_resolution_to_size(resolution, width_first=True):
     if resolution == '720p':

@@ -15,7 +15,7 @@ import utils
 import params ## you can modify the content of params.py
 
 ## Test epoch
-epoch_ids = [1]
+epoch_ids = [10]
 ## Load model
 model = utils.get_model()
 
@@ -26,16 +26,16 @@ def img_pre_process(img):
     :param img: The image to be processed
     :return: Returns the processed image
     """
-    img = change_color_space(img)
-    img = translate(img)
-    img = resize(img)
-
     ## Chop off 1/3 from the top and cut bottom 150px(which contains the head of car)
     #shape = img.shape
     #img = img[int(shape[0]/3):shape[0]-150, 0:shape[1]]
     ## Resize the image
    # img = cv2.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h), interpolation=cv2.INTER_AREA)
-    ## Return the image sized as a 4D array
+    # processing
+    img = change_color_space(img)
+    img = translate(img)
+    img = resize(img)
+    ## Return the image sized as a 4D arrayRoom 401,No 20 Yandun Rd,Yuexiu,Guangzhou,Guangdong,China
     return np.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h, params.FLAGS.img_c))
 
 
@@ -81,6 +81,7 @@ for epoch_id in epoch_ids:
             img = img_pre_process(img)
             img = img[None,:,:,:]
             deg = float(model.predict(img, batch_size=1))
+            print(deg)
             machine_steering.append(deg)
 
     cap.release()
