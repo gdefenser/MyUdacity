@@ -273,8 +273,7 @@ def visualize(epoch_id, machine_steering, out_dir, perform_smoothing=False,
                 continue
             xx.append(f_rel/30)
             hh.append(human_steering[f_abs])
-            mm.append(machine_steering[f_abs])
-
+            mm.append(machine_steering[f_abs])         
         fig = plt.figure()
         axis = fig.add_subplot(1, 1, 1)
 

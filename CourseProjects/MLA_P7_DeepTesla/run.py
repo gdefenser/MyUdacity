@@ -15,7 +15,7 @@ import utils
 import params ## you can modify the content of params.py
 
 ## Test epoch
-epoch_ids = [10]
+epoch_ids = [1]
 ## Load model
 model = utils.get_model()
 
@@ -60,7 +60,6 @@ def resize(img):
 
 
 
-
 ## Process video
 for epoch_id in epoch_ids:
     print('---------- processing video for epoch {} ----------'.format(epoch_id))
@@ -81,7 +80,6 @@ for epoch_id in epoch_ids:
             img = img_pre_process(img)
             img = img[None,:,:,:]
             deg = float(model.predict(img, batch_size=1))
-            print(deg)
             machine_steering.append(deg)
 
     cap.release()
