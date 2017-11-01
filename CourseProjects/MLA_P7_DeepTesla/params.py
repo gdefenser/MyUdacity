@@ -18,7 +18,7 @@ flags.DEFINE_integer('img_c', 3, 'The number of channels.')
 np.random.seed(42)
 
 ## Path
-parent_path='E:/Lovesha/Udacity/Projects/MyUdacity.git/trunk/CourseProjects/MLA_P7_DeepTesla'
+parent_path='E:\MyGithub/MyUdacity/trunk/CourseProjects/MLA_P7_DeepTesla'
 temp_dir=parent_path+'/temp'
 data_dir = parent_path+'/epochs'
 out_dir = parent_path+'/output'
