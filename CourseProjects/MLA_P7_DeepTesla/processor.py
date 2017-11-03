@@ -90,7 +90,7 @@ def load_dataset_by_batch():
     if not os.path.exists(params.pickle_dir):
         os.makedirs(params.pickle_dir) 
 
-    for epoch_id in range(1,10):
+    for epoch_id in range(1,2):
         print('Processing epoch{:0>2}>>>'.format(epoch_id))
 
         features = None
@@ -120,11 +120,19 @@ def load_dataset_by_batch():
     print("Length of features : "+str(len(all_features)/2)+" length of labels : "+str(len(all_labels)/2))
     return all_features,all_labels
 
-def fit_model(model,epochs=10):
+def fit_model(features,labels,model,epochs=10):
+    X_train, X_test, y_train, y_test = split_datasets(features,labels)
+    print("Split result=========================")
+    print("Shape of trainning set")
+    print(X_train.shape, y_train.shape)
+    print("Shape of test set")
+    print(X_test.shape, y_test.shape)
+    
+    print("Start training")
     fit_start = time.time()
     fitted_model=model.fit(X_train, y_train, epochs=epochs ,batch_size=256, validation_split=0.2)
     fit_end = time.time() 
-    print('Training time: {}'.format(fit_end-fit_start))
+    print('Training complete,processing time: {}'.format(fit_end-fit_start))
 
     # Test the performance on test data
     test_loss= model.evaluate(X_test, y_test, batch_size=256)
@@ -142,4 +150,16 @@ def display_fit_result(model):
     plt.xticks(np.arange(0, 11, 2))
     plt.grid()
     plt.show()
+    
+def split_datasets(features,labels):
+    print("Start to split datasets")
+    
+    features = np.array(features)
+    labels = np.array(labels)
+    labels = np.reshape(labels,(len(labels),1))
+    
+    X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+    print("Split completed")
+    #return combine_features,combine_labels
+    return X_train, X_test, y_train, y_test
 
