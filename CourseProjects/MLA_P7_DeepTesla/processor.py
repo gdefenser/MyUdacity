@@ -165,3 +165,12 @@ def split_datasets(features,labels):
     #return combine_features,combine_labels
     return X_train, X_test, y_train, y_test
 
+def save_model(model):
+    json_string = model.to_json()
+    open(utils.join_dir(params.model_dir,"model.json"),'w').write(json_string) 
+    model.save_weights(utils.join_dir(params.model_dir,model.h5))
+
+def evaluate(model,features,labels):
+    loss= model.evaluate(features, labels, batch_size=256, verbose=1)
+    print('Test loss is:{}'.format(loss))
+
