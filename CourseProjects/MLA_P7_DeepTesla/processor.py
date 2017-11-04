@@ -17,18 +17,6 @@ def get_front_file(epoch_id):
 def get_steering_file(epoch_id):
     return utils.join_dir(params.data_dir,'epoch{:0>2}_steering.csv'.format(epoch_id))
 
-def get_combine_dataset(start_idx,end_idx,need_copy=False):    
-    epochs = []
-    
-    for i in range(start_idx,end_idx+1):
-        epoch = utils.fetch_csv_data(get_steering_file(i))
-        print('Records in epoch{:0>2}_steering.csv : {}'.format(i,len(epoch)))
-        epochs.append(epoch)
-        if need_copy:
-            epochs.append(epoch)
-
-    return pd.concat(epochs).wheel
-
 def check_dataset(start_idx,end_idx):
     epoch_all = get_combine_dataset(start_idx,end_idx)
     print('Total records from epoch{:0>2} to epoch{:0>2} : {}'.format(start_idx,end_idx,len(epoch_all)))
@@ -53,36 +41,64 @@ def resize(img):
     img = cv2.resize(src=img,dsize=(d_x,d_y),interpolation=cv2.INTER_AREA)
     return img
 
-def get_combine_img(start_idx,end_idx,need_copy=False):
+def img_pre_process(img,need_ori=False):
+    if not need_ori:
+        img = change_color_space(img)
+        img = translate(img)
+        img = resize(img)
+    return np.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h, params.FLAGS.img_c))
+
+def get_combine_img(start_idx,end_idx,need_ori=False):
     imgs = []
-    fc = 0
     for i in range(start_idx,end_idx+1):
-        vname='epoch{:0>2}_front.mkv'.format(i)
-        cap = cv2.VideoCapture(utils.join_dir(params.data_dir,vname))
+        cap = cv2.VideoCapture(utils.join_dir(params.data_dir,'epoch{:0>2}_front.mkv'.format(i)))
         
         while True:
             ret, frame = cap.read()
             if not ret:
                 break;
             #pre-process
-            if need_copy:
-                imgs.append(frame)
-            frame = img_pre_process(frame)
+            frame = img_pre_process(frame,need_ori)
             imgs.append(frame)
-            fc = fc + 1
         cap.release()
-        print("Frames in "+vname+": "+str(fc)) 
-        fc = 0
-        
     return imgs
 
-def img_pre_process(img):
-    img = change_color_space(img)
-    img = translate(img)
-    img = resize(img)
-    return np.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h, params.FLAGS.img_c))
+def get_combine_sig(start_idx,end_idx):    
+    epochs = []
+    
+    for i in range(start_idx,end_idx+1):
+        epoch = utils.fetch_csv_data(get_steering_file(i))
+        epochs.append(epoch)
 
-def load_dataset_by_batch():
+    return pd.concat(epochs).wheel.tolist()
+
+def load_features(file_name,epoch_id,need_ori=False):
+    features = None
+    if os.path.isfile(file_name):
+        features = pickle.load(open(file_name, mode='rb'))   
+        print("Frames in features{:0>2}.p : {}".format(epoch_id,len(features))) 
+    else:
+        features = get_combine_img(epoch_id,epoch_id)
+        print("Frames in epoch{:0>2}_front.mkv : {}".format(epoch_id,len(features))) 
+        if need_ori:
+            features += get_combine_img(epoch_id,epoch_id,True)
+        pickle.dump(features, open(file_name, 'wb'))
+    return features
+
+def load_labels(file_name,epoch_id,need_ori=False):
+    labels = None
+    if os.path.isfile(file_name):
+        labels = pickle.load(open(file_name, mode='rb'))
+        print('Records in labels{:0>2}.p : {}'.format(epoch_id,len(labels)))
+    else:
+        labels = get_combine_sig(epoch_id,epoch_id)
+        print('Records in epoch{:0>2}_steering.csv : {}'.format(epoch_id,len(labels)))
+        if need_ori:
+            labels += get_combine_sig(epoch_id,epoch_id)
+        pickle.dump(labels, open(file_name, 'wb'))
+    return labels
+
+def load_dataset(need_ori=False):
     all_features = []
     all_labels = []
     print('Start to load datasets...')
@@ -90,34 +106,20 @@ def load_dataset_by_batch():
     if not os.path.exists(params.pickle_dir):
         os.makedirs(params.pickle_dir) 
 
-    for epoch_id in range(1,2):
+    for epoch_id in range(1,10):
         print('Processing epoch{:0>2}>>>'.format(epoch_id))
 
-        features = None
-        labels = None
-
-        features_file = '{}/features{:0>2}.p'.format(params.pickle_dir,epoch_id)
-        labels_file = '{}/labels{:0>2}.p'.format(params.pickle_dir,epoch_id)
+        features_file = utils.join_dir(params.pickle_dir,'features{:0>2}.p'.format(epoch_id))
+        labels_file = utils.join_dir(params.pickle_dir,'labels{:0>2}.p'.format(epoch_id))
         
-        if os.path.isfile(features_file):
-            features = pickle.load(open(features_file, mode='rb'))   
-            print("Frames in epoch{:0>2}_front.mkv : {}".format(epoch_id,len(features)/2)) 
-        else:
-            features = get_combine_img(epoch_id,epoch_id,need_copy=True)
-            pickle.dump((features), open(features_file, 'wb'))
-
-        if os.path.isfile(labels_file):
-            labels = pickle.load(open(labels_file, mode='rb'))
-            print('Records in epoch{:0>2}_steering.csv : {}'.format(epoch_id,len(labels)/2))
-        else:
-            labels = get_combine_dataset(epoch_id,epoch_id,need_copy=True)
-            pickle.dump((labels), open(labels_file, 'wb'))    
+        features = load_features(features_file,epoch_id,need_ori)
+        labels = load_labels(labels_file,epoch_id,need_ori)
 
         all_features += features
-        all_labels += labels.tolist()
+        all_labels += labels
         
     print("Done")
-    print("Length of features : "+str(len(all_features)/2)+" length of labels : "+str(len(all_labels)/2))
+    print("Length of features : "+str(len(all_features))+", length of labels : "+str(len(all_labels)))
     return all_features,all_labels
 
 def fit_model(features,labels,model,epochs=10):
