@@ -174,3 +174,42 @@ def evaluate(model,features,labels):
     loss= model.evaluate(features, labels, batch_size=256, verbose=1)
     print('Test loss is:{}'.format(loss))
 
+def evaluate_final_model(model,features,labels):
+    features = np.array(features)
+    labels = np.array(labels)
+    labels = np.reshape(labels,(len(labels),1))
+
+    pass_ms = []
+    abs_error = []
+    fit_labels = []
+
+    print('Start to evaluate model')
+    for fid in range(len(features)):
+        feature = features[fid]
+        label = labels[fid]
+
+        feature = feature[None,:,:,:]
+        fit_start = time.time()
+        fit_label = float(model.predict(feature, batch_size=1))
+        fit_end = time.time()
+
+        pass_ms.append(fit_end-fit_start)
+        abs_error.append(abs(fit_label-label))
+        fit_labels.append(fit_label)
+    print('Completed,output result...')
+
+    plt.figure
+    plt.plot(fit_labels)
+    plt.plot(labels)
+    plt.plot(pass_ms)
+    plt.plot(abs_error)
+    plt.ylabel('Evaluate', fontsize=11)
+    plt.xlabel('Frame counts', fontsize=11)
+    plt.legend(['Fit label', 'Label','Pass ms','Abs error'], loc='upper right')
+    plt.xlim((0,2700))
+    plt.grid()
+    plt.show()
+
+    mean_abs_error = float(sum(abs_error))/float(len(abs_error))
+    print('Mean absolute error is {}'.format(mean_abs_error))
+

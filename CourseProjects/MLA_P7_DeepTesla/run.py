@@ -36,7 +36,7 @@ def img_pre_process(img):
     img = translate(img)
     img = resize(img)
     ## Return the image sized as a 4D arrayRoom 401,No 20 Yandun Rd,Yuexiu,Guangzhou,Guangdong,China
-    return np.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h, params.FLAGS.img_c))
+    return np.resize(img, (params.FLAGS.img_w, params.FLAGS.img_h, params.FLAGS.img_c))/100.
 
 
 def change_color_space(img):
