@@ -15,7 +15,7 @@ import utils
 import params ## you can modify the content of params.py
 
 ## Test epoch
-epoch_ids = [1]
+epoch_ids = [10]
 ## Load model
 model = utils.get_model()
 
