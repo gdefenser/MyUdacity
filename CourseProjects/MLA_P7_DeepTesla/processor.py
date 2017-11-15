@@ -180,7 +180,8 @@ def evaluate_final_model(model,features,labels):
     labels = np.reshape(labels,(len(labels),1))
 
     pass_ms = []
-    abs_error = []
+    ae = []
+    se = []
     fit_labels = []
 
     print('Start to evaluate model')
@@ -194,7 +195,8 @@ def evaluate_final_model(model,features,labels):
         fit_end = time.time()
 
         pass_ms.append(fit_end-fit_start)
-        abs_error.append(abs(fit_label-label))
+        ae.append(abs(fit_label-label))
+        se.append(pow(fit_label-label,2))
         fit_labels.append(fit_label)
     print('Completed,output result...')
 
@@ -202,14 +204,17 @@ def evaluate_final_model(model,features,labels):
     plt.plot(fit_labels)
     plt.plot(labels)
     plt.plot(pass_ms)
-    plt.plot(abs_error)
+    plt.plot(ae)
+    plt.plot(se)
     plt.ylabel('Evaluate', fontsize=11)
     plt.xlabel('Frame counts', fontsize=11)
-    plt.legend(['Fit label', 'Label','Pass ms','Abs error'], loc='upper right')
+    plt.legend(['Fit label', 'Label','Pass ms','AE','SE'], loc='upper right')
     plt.xlim((0,2700))
     plt.grid()
     plt.show()
 
-    mean_abs_error = float(sum(abs_error))/float(len(abs_error))
-    print('Mean absolute error is {}'.format(mean_abs_error))
+    mae = float(sum(ae))/float(len(ae))
+    mse = float(sum(se))/float(len(se))
+    print('Mean absolute error is {}'.format(mae))
+    print('Mean squared  error is {}'.format(mse))
 
