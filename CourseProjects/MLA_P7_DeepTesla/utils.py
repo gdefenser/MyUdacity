@@ -388,7 +388,7 @@ def save_model(model, epoch=''):
     model.save_weights(param_path)
     print('Model saved')
     
-def get_model():
+def get_model(json='model.json',h5='model.h5'):
     """
     Defines the model
     :return: Returns the model
@@ -397,8 +397,8 @@ def get_model():
     Check if a model already exists
     """
     model = None
-    model_path = join_dir(params.model_dir, 'model.json')
-    param_path = join_dir(params.model_dir, 'model.h5')
+    model_path = join_dir(params.model_dir, json)
+    param_path = join_dir(params.model_dir, h5)
     if os.path.exists(model_path):
         ch = input('Model already exists, do you want to reuse? (y/n): ')
         if ch == 'y' or ch == 'Y':

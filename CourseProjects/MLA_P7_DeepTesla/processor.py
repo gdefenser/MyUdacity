@@ -24,9 +24,8 @@ def check_dataset(start_idx,end_idx):
 
 def change_color_space(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    img = cv2.cvtColor(img, cv2.COLOR_HSV2RGB)
     img[:, :, 2] = img[:, :, 2] *np.random.uniform(0.1,1)
-    return img
+    return cv2.cvtColor(img, cv2.COLOR_HSV2RGB)
 
 def translate(img):
     offset_x = np.random.uniform(1,img.shape[1]/10)
@@ -98,7 +97,7 @@ def load_labels(file_name,epoch_id,need_ori=False):
         pickle.dump(labels, open(file_name, 'wb'))
     return labels
 
-def load_dataset(need_ori=False):
+def load_dataset(start_idx=1,end_idx=10,need_ori=False):
     all_features = []
     all_labels = []
     print('Start to load datasets...')
@@ -106,7 +105,7 @@ def load_dataset(need_ori=False):
     if not os.path.exists(params.pickle_dir):
         os.makedirs(params.pickle_dir) 
 
-    for epoch_id in range(1,10):
+    for epoch_id in range(start_idx,end_idx):
         print('Processing epoch{:0>2}>>>'.format(epoch_id))
 
         features_file = utils.join_dir(params.pickle_dir,'features{:0>2}.p'.format(epoch_id))
@@ -168,7 +167,8 @@ def split_datasets(features,labels):
 def save_model(model):
     json_string = model.to_json()
     open(utils.join_dir(params.model_dir,"model.json"),'w').write(json_string) 
-    model.save_weights(utils.join_dir(params.model_dir,model.h5))
+    model.save_weights(utils.join_dir(params.model_dir,"model.h5"))
+    print("Model and weights already saved")
 
 def evaluate(model,features,labels):
     loss= model.evaluate(features, labels, batch_size=256, verbose=1)
@@ -215,6 +215,8 @@ def evaluate_final_model(model,features,labels):
 
     mae = float(sum(ae))/float(len(ae))
     mse = float(sum(se))/float(len(se))
+    mps = float(sum(pass_ms))/float(len(pass_ms))
     print('Mean absolute error is {}'.format(mae))
     print('Mean squared  error is {}'.format(mse))
+    print('Mean pass ms is {}'.format(mps))
 
