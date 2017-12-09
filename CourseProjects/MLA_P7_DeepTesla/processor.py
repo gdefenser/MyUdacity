@@ -140,15 +140,15 @@ def fit_model(features,labels,model,epochs=10):
     print('Test loss is:{}'.format(test_loss))
     return fitted_model
 
-def display_fit_result(model):
+def display_fit_result(model,xlim=10):
     plt.plot(model.history['loss'])
     plt.plot(model.history['val_loss'])
 
     plt.ylabel('loss', fontsize=11)
     plt.xlabel('epoch', fontsize=11)
     plt.legend(['train', 'valid'], loc='best')
-    plt.xlim((0,10))
-    plt.xticks(np.arange(0, 11, 2))
+    plt.xlim((0,xlim))
+    plt.xticks(np.arange(0, xlim+1, 2))
     plt.grid()
     plt.show()
     
