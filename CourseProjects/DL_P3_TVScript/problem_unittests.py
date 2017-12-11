@@ -169,8 +169,8 @@ def test_get_inputs(get_inputs):
 def test_get_init_cell(get_init_cell):
     with tf.Graph().as_default():
         #Reference from https://github.com/udacity/dlnd-issue-reports/issues/334
-        #test_batch_size_ph = tf.placeholder(tf.int32)
-        test_batch_size_ph = tf.placeholder(tf.int32, [])
+        test_batch_size_ph = tf.placeholder(tf.int32)
+        #test_batch_size_ph = tf.placeholder(tf.int32, [])
         test_rnn_size = 256
 
         cell, init_state = get_init_cell(test_batch_size_ph, test_rnn_size)
